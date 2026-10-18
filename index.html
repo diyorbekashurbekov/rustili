@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Алматы — город у гор</title>
+<meta name="description" content="Географическое положение Алматы, окружающая природа: реки, горы, озёра. Экология города. Игры и викторина.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800;900&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#031a2b; --ocean:#06324d; --teal:#12a4a8; --aqua:#5ee6d6;
+  --foam:#e8fbff; --sun:#ffc76b; --coral:#ff7a6b; --leaf:#5fd38d;
+  --text:#e8f6fb; --muted:#a9c9d6; --card:rgba(255,255,255,.06); --line:rgba(255,255,255,.14);
+  --r:24px; --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:clip}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:Manrope,system-ui,sans-serif;background:var(--deep);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+body.loading{overflow:hidden}
+h1,h2,h3,.uf{font-family:Unbounded,Manrope,sans-serif;line-height:1.08;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+img{display:block;max-width:100%}
+.wrap{width:min(1200px,100% - 32px);margin-inline:auto}
+section{position:relative}
+.full{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.shade{position:absolute;inset:0;pointer-events:none}
+.b{color:var(--foam);font-weight:700}
+
+/* ===== прелоадер ===== */
+#loader{position:fixed;inset:0;z-index:999;background:var(--deep);display:grid;place-items:center;overflow:hidden}
+#loader .water{position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(var(--teal),#0b5a7a);transition:height .4s var(--ease)}
+#loader .water::before{content:"";position:absolute;left:-50%;top:-38px;width:200%;height:40px;background:radial-gradient(40px 22px at 40px 40px,var(--teal) 98%,transparent) 0 0/80px 40px repeat-x;animation:lw 2s linear infinite}
+@keyframes lw{to{transform:translateX(80px)}}
+#loader .lt{position:relative;text-align:center;z-index:2}
+#loader .pct{font-family:Unbounded;font-weight:900;font-size:clamp(60px,14vw,150px);color:#fff;line-height:1}
+#loader small{letter-spacing:.35em;text-transform:uppercase;color:var(--foam);font-size:12px}
+
+/* ===== фон, курсор, прогресс ===== */
+#bubbles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:40;opacity:.5}
+.tube{position:fixed;right:18px;top:50%;transform:translateY(-50%);width:6px;height:36vh;border-radius:8px;background:rgba(255,255,255,.12);z-index:60;overflow:hidden}
+.tube i{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(to top,var(--teal),var(--aqua));box-shadow:0 0 14px var(--aqua)}
+.ripple{position:fixed;width:12px;height:12px;border:2px solid var(--aqua);border-radius:50%;pointer-events:none;z-index:200;transform:translate(-50%,-50%);animation:rip .9s ease-out forwards}
+@keyframes rip{to{width:150px;height:150px;opacity:0;border-width:1px}}
+#cur{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:1.5px solid rgba(232,251,255,.8);pointer-events:none;z-index:300;mix-blend-mode:difference;transition:width .3s,height .3s,margin .3s,background .3s;display:none}
+#cur.big{width:70px;height:70px;margin:-35px 0 0 -35px;background:rgba(255,255,255,.9)}
+@media (pointer:fine){#cur{display:block}}
+
+/* ===== навигация ===== */
+.nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;display:flex;gap:2px;padding:6px;border-radius:99px;background:rgba(3,26,43,.5);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);max-width:calc(100% - 24px);overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{padding:8px 14px;border-radius:99px;font-size:14px;font-weight:700;white-space:nowrap;color:var(--muted);transition:.3s}
+.nav a:hover,.nav a.on{background:rgba(94,230,214,.18);color:#fff}
+.chapter{position:fixed;left:22px;bottom:20px;z-index:80;font-family:Unbounded;font-size:12px;letter-spacing:.2em;color:#fff;text-transform:uppercase;mix-blend-mode:difference;display:flex;gap:12px;align-items:center}
+.chapter b{font-size:22px;letter-spacing:0}
+
+/* ===== общие ===== */
+.sec{padding:clamp(90px,13vw,150px) 0;z-index:2}
+.tag{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:.25em;text-transform:uppercase;color:var(--aqua);margin-bottom:18px}
+.tag::before{content:"";width:34px;height:2px;background:currentColor}
+.h2{font-size:clamp(34px,6vw,80px);font-weight:800;margin-bottom:22px}
+.h2 .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em}
+.h2 .w>span{display:inline-block}
+.lead{font-size:clamp(17px,1.8vw,21px);color:var(--muted);max-width:740px}
+.lead b,.card b{color:var(--foam)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px;backdrop-filter:blur(8px);transition:transform .5s var(--ease),border-color .4s}
+.card:hover{transform:translateY(-6px);border-color:rgba(94,230,214,.45)}
+.card h3{font-size:19px;margin-bottom:8px}
+.card p{color:var(--muted);font-size:16px}
+.grid{display:grid;gap:18px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.chip{display:inline-block;font-size:13px;font-weight:800;padding:6px 14px;border-radius:99px;background:rgba(94,230,214,.16);color:var(--aqua);backdrop-filter:blur(6px)}
+.glass{background:rgba(3,26,43,.45);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:var(--r)}
+
+/* ===== 1. HERO: полёт сквозь буквы ===== */
+.hero{height:100vh;min-height:560px;overflow:hidden;background:var(--deep)}
+.hero-img{position:absolute;inset:0;will-change:transform}
+.hero-img .shade{background:linear-gradient(180deg,rgba(3,26,43,.2),rgba(3,26,43,.05) 50%,rgba(3,26,43,.55))}
+.hero-mask{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:2;will-change:transform}
+.hero-top{position:absolute;left:0;right:0;top:16%;z-index:3;text-align:center;font-size:13px;letter-spacing:.4em;text-transform:uppercase;color:var(--foam)}
+.hero-bottom{position:absolute;left:0;right:0;bottom:9%;z-index:3;text-align:center;padding:0 16px;color:var(--muted);font-size:clamp(15px,1.6vw,19px)}
+.hero-after{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;padding:0 max(16px,5vw) 12vh;opacity:0;pointer-events:none}
+.hero-after h1{font-size:clamp(40px,8vw,120px);font-weight:900;color:#fff;text-shadow:0 10px 50px rgba(0,0,0,.4);max-width:1100px}
+.hero-after p{font-size:clamp(17px,2vw,24px);color:#fff;max-width:640px;margin-top:16px;text-shadow:0 2px 14px rgba(0,0,0,.6);font-weight:600}
+.scroll-hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:#fff}
+.scroll-hint b{width:22px;height:36px;border:2px solid #fff;border-radius:14px;position:relative}
+.scroll-hint b::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:#fff;animation:wheel 1.6s infinite}
+@keyframes wheel{0%{opacity:0;transform:translateY(0)}30%{opacity:1}100%{opacity:0;transform:translateY(12px)}}
+
+/* ===== 2. ГЕО: спуск из космоса ===== */
+.geo{height:100vh;overflow:hidden;background:#000}
+.g-img{will-change:transform,opacity,clip-path}
+.g2,.g3{opacity:0}
+.geo .shade{background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.55)),linear-gradient(transparent 55%,rgba(3,26,43,.85))}
+.hud{position:absolute;inset:clamp(70px,9vh,90px) clamp(16px,4vw,50px) clamp(20px,5vh,50px);pointer-events:none;z-index:3;font-family:Unbounded;color:#fff}
+.hud .corner{position:absolute;width:34px;height:34px;border:2px solid rgba(94,230,214,.8)}
+.hud .tl{top:0;left:0;border-right:0;border-bottom:0}.hud .tr{top:0;right:0;border-left:0;border-bottom:0}
+.hud .bl{bottom:0;left:0;border-right:0;border-top:0}.hud .br{bottom:0;right:0;border-left:0;border-top:0}
+.hud .alt{position:absolute;top:18px;right:22px;text-align:right}
+.hud .alt small,.hud .coord small{display:block;font-family:Manrope;font-weight:800;font-size:11px;letter-spacing:.3em;color:var(--aqua)}
+.hud .alt b{font-size:clamp(28px,4.5vw,56px);font-weight:800}
+.hud .coord{position:absolute;top:18px;left:22px;font-size:clamp(12px,1.3vw,15px);line-height:1.8}
+.cross{position:absolute;left:50%;top:50%;width:90px;height:90px;margin:-45px 0 0 -45px;border:1.5px solid rgba(94,230,214,.9);border-radius:50%;z-index:3}
+.cross::before,.cross::after{content:"";position:absolute;background:rgba(94,230,214,.9)}
+.cross::before{left:50%;top:-18px;bottom:-18px;width:1.5px}
+.cross::after{top:50%;left:-18px;right:-18px;height:1.5px}
+.cross i{position:absolute;inset:-14px;border:1px solid rgba(94,230,214,.5);border-radius:50%;animation:ping 2s ease-out infinite}
+@keyframes ping{from{transform:scale(.6);opacity:1}to{transform:scale(1.8);opacity:0}}
+.caps{position:absolute;left:clamp(16px,5vw,70px);right:clamp(16px,5vw,70px);bottom:clamp(40px,9vh,90px);z-index:4}
+.cap{position:absolute;left:0;bottom:0;max-width:640px;opacity:0}
+.cap h2{font-size:clamp(28px,4.6vw,60px);font-weight:800;color:#fff;margin:10px 0;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.cap p{color:#fff;font-size:clamp(15px,1.6vw,19px);font-weight:600;text-shadow:0 2px 12px rgba(0,0,0,.8)}
+
+/* ===== ЦИФРЫ: над фото ===== */
+.facts{height:100vh;min-height:520px;overflow:hidden;display:grid;place-items:center}
+.facts .shade{background:linear-gradient(rgba(3,26,43,.72),rgba(3,26,43,.9))}
+.f-in{position:relative;z-index:2;width:min(1200px,100% - 32px);text-align:center}
+.f-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,3vw,40px);margin:clamp(24px,5vh,56px) 0 clamp(20px,4vh,40px)}
+.f-item b{display:block;font-family:Unbounded;font-weight:900;font-size:clamp(26px,3.6vw,56px);color:#fff;line-height:1.05;white-space:nowrap}
+.f-item>span{display:block;margin-top:12px;color:var(--aqua);font-weight:800;font-size:clamp(11px,1.2vw,15px);letter-spacing:.1em;text-transform:uppercase}
+.f-note{color:#fff;font-size:clamp(15px,1.7vw,20px);font-weight:600;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+
+/* ===== 3. ГОРЫ: стопка карточек ===== */
+.mount{height:100vh;overflow:hidden;background:#071c2e}
+.m-bg{filter:blur(2px) brightness(.45);transform:scale(1.1)}
+.m-head{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;z-index:2;padding:0 16px}
+.m-head .h2{color:#fff}
+.m-head .lead{margin:0 auto;color:#e6f3f8}
+.m-card{position:absolute;left:50%;top:54%;width:min(1100px,92vw);height:min(70vh,640px);border-radius:28px;overflow:hidden;z-index:3;box-shadow:0 40px 90px rgba(0,0,0,.5);will-change:transform}
+.m-card img{transform:scale(1.15)}
+.m-card .shade{background:linear-gradient(transparent 35%,rgba(3,26,43,.92))}
+.m-txt{position:absolute;left:clamp(20px,4vw,48px);right:clamp(20px,4vw,48px);bottom:clamp(20px,4vw,44px);z-index:2}
+.m-txt .n{font-family:Unbounded;font-size:13px;color:var(--aqua);letter-spacing:.2em}
+.m-txt h3{font-size:clamp(30px,5vw,64px);font-weight:800;color:#fff;margin:6px 0 10px}
+.m-txt p{color:#e6f3f8;max-width:620px;font-size:clamp(15px,1.5vw,18px)}
+.altimeter{position:absolute;right:clamp(14px,3vw,40px);top:clamp(70px,11vh,110px);z-index:5;text-align:right;padding:14px 20px}
+.altimeter small{display:block;font-size:11px;font-weight:800;letter-spacing:.3em;color:var(--aqua)}
+.altimeter b{font-family:Unbounded;font-size:clamp(26px,3.5vw,44px);font-weight:800;color:#fff}
+.alt-scale{position:absolute;left:clamp(14px,3vw,40px);top:20%;bottom:16%;width:4px;border-radius:4px;background:rgba(255,255,255,.15);z-index:5}
+.alt-scale i{position:absolute;left:-6px;width:16px;height:16px;border-radius:50%;background:var(--sun);box-shadow:0 0 18px var(--sun);top:0;margin-top:-8px}
+
+/* ===== 4. РЕКИ: вода открывает кадры ===== */
+.rivers{height:100vh;overflow:hidden;background:#04202f}
+.r-img{will-change:clip-path,transform}
+.r-img:not(:first-of-type){clip-path:inset(0 0 100% 0)}
+.rivers .shade{background:linear-gradient(90deg,rgba(3,26,43,.85),rgba(3,26,43,.2) 60%,transparent),linear-gradient(transparent 60%,rgba(3,26,43,.6))}
+.r-route{position:absolute;left:clamp(16px,4vw,60px);top:18vh;bottom:14vh;width:2px;background:rgba(255,255,255,.2);z-index:4}
+.r-route .fill{position:absolute;left:0;top:0;width:100%;height:0;background:var(--aqua);box-shadow:0 0 12px var(--aqua)}
+.r-route .st{position:absolute;left:-6px;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:var(--deep);border:2px solid rgba(255,255,255,.5);transition:.4s}
+.r-route .st span{position:absolute;left:24px;top:50%;transform:translateY(-50%);white-space:nowrap;font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.55);transition:.4s}
+.r-route .st.on{background:var(--aqua);border-color:var(--aqua);box-shadow:0 0 14px var(--aqua)}
+.r-route .st.on span{color:#fff}
+.r-txts{position:absolute;left:clamp(150px,18vw,280px);right:16px;top:50%;transform:translateY(-50%);z-index:4;max-width:620px}
+.r-t{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);opacity:0}
+.r-t:first-child{opacity:1}
+.r-t h2{font-size:clamp(30px,5vw,66px);font-weight:800;color:#fff;margin:12px 0;text-shadow:0 4px 30px rgba(0,0,0,.5)}
+.r-t p{color:#eaf6fa;font-size:clamp(15px,1.6vw,19px);font-weight:500;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+
+/* ===== 5. ОЗЁРА: горизонтальная галерея ===== */
+.lakes{height:100vh;overflow:hidden;background:var(--deep)}
+.l-track{display:flex;align-items:center;gap:3vw;height:100%;padding:0 6vw;width:max-content;will-change:transform}
+.l-intro{width:min(560px,80vw);flex:none}
+.l-panel{flex:none;width:min(78vw,1000px);height:76vh;border-radius:30px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.l-panel img{position:absolute;top:0;left:-15%;width:130%;height:100%;object-fit:cover;max-width:none}
+.l-panel .shade{background:linear-gradient(transparent 40%,rgba(3,26,43,.9))}
+.l-panel .txt{position:absolute;left:clamp(20px,3vw,40px);right:clamp(20px,3vw,40px);bottom:clamp(20px,3vw,36px);z-index:2}
+.l-panel h3{font-size:clamp(26px,3.6vw,48px);font-weight:800;color:#fff;margin:10px 0 8px}
+.l-panel p{color:#e6f3f8;max-width:560px;font-size:clamp(14px,1.4vw,17px)}
+.l-num{position:absolute;top:22px;right:26px;z-index:2;font-family:Unbounded;font-weight:900;font-size:clamp(40px,6vw,80px);color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.7)}
+.l-end{flex:none;width:30vw}
+
+/* ===== 6. ЭКОЛОГИЯ: смог -> чистое небо ===== */
+.eco{height:100vh;overflow:hidden;background:#222}
+.e-clear{clip-path:inset(0 0 0 100%)}
+.e-line{position:absolute;top:0;bottom:0;left:100%;width:3px;margin-left:-1.5px;background:#fff;z-index:4;box-shadow:0 0 20px rgba(255,255,255,.8)}
+.e-line i{position:absolute;top:50%;left:50%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:#fff;color:var(--deep);display:grid;place-items:center;font-size:22px;font-style:normal;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.eco .shade{background:linear-gradient(transparent 50%,rgba(0,0,0,.65))}
+.e-lab{position:absolute;top:clamp(80px,12vh,110px);z-index:5;padding:10px 18px;border-radius:99px;font-weight:800;font-size:14px;color:#fff;display:flex;gap:8px;align-items:center}
+.e-lab i{width:10px;height:10px;border-radius:50%}
+.e-lab.l{left:clamp(16px,3vw,40px)} .e-lab.r{right:clamp(30px,4vw,60px);opacity:0}
+.e-txt{position:absolute;left:0;right:0;bottom:clamp(40px,10vh,100px);z-index:5;text-align:center;padding:0 16px}
+.e-txt h2{font-size:clamp(30px,5.6vw,74px);font-weight:900;color:#fff;text-shadow:0 6px 40px rgba(0,0,0,.6)}
+.e-txt p{color:#fff;font-weight:600;font-size:clamp(15px,1.7vw,20px);text-shadow:0 2px 12px rgba(0,0,0,.8);max-width:640px;margin:10px auto 0}
+.e-t2{position:absolute;left:0;right:0;bottom:0;opacity:0}
+
+/* ===== ПРИЧИНА → РЕШЕНИЕ ===== */
+.why{height:100vh;min-height:560px;overflow:hidden}
+.w-good{opacity:0}
+.why .shade{background:linear-gradient(90deg,rgba(3,26,43,.9),rgba(3,26,43,.35) 70%),linear-gradient(transparent 50%,rgba(3,26,43,.8))}
+.w-in{position:absolute;inset:0;z-index:3;display:grid;place-items:center;padding:0 clamp(16px,6vw,90px)}
+.w-side{grid-area:1/1;max-width:680px;width:100%}
+.w-2{opacity:0}
+.w-side h2{font-size:clamp(28px,4.6vw,60px);font-weight:800;color:#fff;margin:12px 0;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.w-side>p{color:#eaf6fa;font-size:clamp(15px,1.7vw,20px);font-weight:600;max-width:560px;text-shadow:0 2px 12px rgba(0,0,0,.8)}
+.bad-chip{background:rgba(255,122,107,.25);color:#fff}
+.w-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(18px,3vh,30px)}
+.wc{padding:12px 20px;border-radius:99px;font-weight:800;font-size:clamp(14px,1.5vw,18px);color:#fff;backdrop-filter:blur(10px);border:1px solid var(--line)}
+.wc.bad{background:rgba(255,122,107,.22)} .wc.good{background:rgba(95,211,141,.22)}
+
+/* ===== ИГРЫ ===== */
+.games{background:radial-gradient(900px 500px at 20% 0%,rgba(94,230,214,.14),transparent 60%),#071f30}
+.tabs{display:flex;flex-wrap:wrap;gap:10px;margin:40px 0 26px}
+.tab{padding:12px 22px;border-radius:99px;border:1px solid var(--line);font-weight:800;transition:.3s}
+.tab:hover{border-color:var(--aqua)}
+.tab.on{background:var(--aqua);color:var(--deep);border-color:var(--aqua)}
+.game{display:none;padding:clamp(22px,4vw,44px)}
+.game.on{display:block;animation:fadeUp .5s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}}
+.q-top{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-weight:800;font-size:14px;margin-bottom:12px}
+.q-prog{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:26px}
+.q-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--aqua));transition:width .5s}
+.q-text{font-size:clamp(20px,2.6vw,28px);margin-bottom:24px}
+.opts{display:grid;gap:12px}
+.opt{text-align:left;padding:16px 20px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);font-size:17px;font-weight:700;transition:.25s}
+.opt:hover:not(:disabled){border-color:var(--aqua);transform:translateX(6px)}
+.opt.ok{background:rgba(95,211,141,.22);border-color:var(--leaf)}
+.opt.no{background:rgba(255,122,107,.2);border-color:var(--coral);animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.fb{min-height:28px;margin-top:16px;font-weight:700;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:14px 26px;border-radius:99px;background:var(--aqua);color:var(--deep);font-weight:800;transition:.3s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(94,230,214,.35)}
+.result{text-align:center;padding:20px 0}
+.result .big{font-family:Unbounded;font-size:clamp(50px,10vw,96px);font-weight:900;color:var(--aqua)}
+.where{display:grid;grid-template-columns:1.3fr 1fr;gap:26px;align-items:center}
+.where .pic{border-radius:20px;overflow:hidden;aspect-ratio:4/3;position:relative}
+.where .pic img{width:100%;height:100%;object-fit:cover}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pairs .colp{display:flex;flex-direction:column;gap:10px}
+.pc{padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);font-weight:700;text-align:left;transition:.25s;font-size:16px}
+.pc:hover{border-color:var(--aqua)}
+.pc.sel{border-color:var(--sun);background:rgba(255,199,107,.15)}
+.pc.done{border-color:var(--leaf);background:rgba(95,211,141,.18);opacity:.7;pointer-events:none}
+.pc.no{animation:shake .4s;border-color:var(--coral)}
+.sort-card{max-width:520px;margin:10px auto 0;text-align:center}
+.sort-item{font-size:clamp(20px,3vw,28px);font-family:Unbounded;font-weight:600;padding:40px 20px;border-radius:24px;background:rgba(255,255,255,.05);border:1px solid var(--line);margin-bottom:22px}
+.sort-item .em{font-size:56px;display:block;margin-bottom:12px}
+.sort-btns{display:flex;gap:14px;justify-content:center}
+.sort-btns button{flex:1;max-width:220px;padding:16px;border-radius:18px;font-weight:800;font-size:17px}
+.b-good{background:rgba(95,211,141,.2);border:1px solid var(--leaf)!important}
+.b-bad{background:rgba(255,122,107,.18);border:1px solid var(--coral)!important}
+
+/* ===== СЛОВАРЬ ===== */
+.dict{background:#071f30}
+.flip{perspective:900px;height:170px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;transition:transform .8s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px;border:1px solid var(--line)}
+.face.front{background:linear-gradient(135deg,rgba(18,164,168,.28),rgba(255,255,255,.04))}
+.face.front h3{font-size:21px}
+.face.front small{color:var(--muted);margin-top:8px}
+.face.back{background:rgba(94,230,214,.14);transform:rotateY(180deg);color:var(--foam)}
+
+footer{padding:70px 0 50px;color:var(--muted);background:#041522;position:relative;z-index:2;font-size:15px}
+footer .uf{font-size:clamp(22px,3vw,30px);color:var(--foam);margin-bottom:10px;text-align:center}
+footer .who{text-align:center}
+.credits{margin-top:40px;font-size:12px;line-height:1.7;opacity:.75;columns:2;column-gap:40px}
+.credits a{text-decoration:underline}
+
+/* ===== адаптив ===== */
+@media (max-width:900px){
+  .where{grid-template-columns:1fr}
+  .f-grid{grid-template-columns:1fr 1fr;gap:26px 14px}
+  .tube,.chapter{display:none}
+  .r-txts{left:56px}
+  .r-route .st span{display:none}
+  .l-panel{width:86vw;height:70vh}
+  .l-intro{width:86vw}
+  .credits{columns:1}
+  .alt-scale{display:none}
+}
+@media (max-width:520px){
+  .pairs{gap:8px}.pc{font-size:14px;padding:12px}
+  .wc{padding:10px 14px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body class="loading">
+
+<div id="loader"><div class="water" id="lWater"></div><div class="lt"><div class="pct" id="lPct">0</div><small>Погружаемся в природу…</small></div></div>
+<noscript><style>#loader{display:none}body.loading{overflow:auto}.g2,.g3,.cap,.r-t,.e-t2,.w-2,.w-good,#heroAfter,.reveal{opacity:1!important}.r-img{clip-path:none!important}</style></noscript>
+<script>
+/* Страховка: что бы ни случилось со скриптами или интернетом,
+   заставка уйдёт и сайт останется читаемым. */
+setTimeout(function () {
+  var l = document.getElementById('loader');
+  if (!l) return;
+  l.remove();
+  document.body.classList.remove('loading');
+  var s = document.createElement('style');
+  s.textContent = '.g2,.g3,.cap,.r-t,.e-t2,.w-2,.w-good,#heroAfter,.reveal{opacity:1!important}.r-img{clip-path:none!important}';
+  document.head.appendChild(s);
+}, 10000);
+</script>
+<canvas id="bubbles" aria-hidden="true"></canvas>
+<div id="cur" aria-hidden="true"></div>
+<div class="tube" aria-hidden="true"><i id="tubeFill"></i></div>
+<div class="chapter" aria-hidden="true"><b id="chNum">00</b><span id="chName">Алматы</span></div>
+
+<nav class="nav" aria-label="Разделы">
+  <a href="#geo" data-n="01">Положение</a>
+  <a href="#mount" data-n="02">Горы</a>
+  <a href="#rivers" data-n="03">Реки</a>
+  <a href="#lakes" data-n="04">Озёра</a>
+  <a href="#eco" data-n="05">Экология</a>
+  <a href="#games" data-n="06">Игры</a>
+  <a href="#dict" data-n="07">Словарь</a>
+</nav>
+
+<!-- ============ 1. HERO ============ -->
+<header class="hero" id="top">
+  <div class="hero-img"><img class="full" src="images/hero.jpg" alt="Большое Алматинское озеро и горы Заилийского Алатау"><div class="shade"></div></div>
+  <svg class="hero-mask" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <mask id="hm" maskUnits="userSpaceOnUse" x="-4000" y="-4000" width="9600" height="8900">
+        <rect x="-4000" y="-4000" width="9600" height="8900" fill="#fff"/>
+        <text x="800" y="540" text-anchor="middle" font-family="Unbounded, sans-serif" font-weight="900" font-size="225" letter-spacing="-4">АЛМАТЫ</text>
+      </mask>
+    </defs>
+    <rect x="-4000" y="-4000" width="9600" height="8900" fill="#031a2b" mask="url(#hm)"/>
+  </svg>
+  <div class="hero-top" id="heroTop">Казахстан · 43° с.ш. · 77° в.д.</div>
+  <div class="hero-bottom" id="heroBottom">Географическое положение · Горы · Реки · Озёра · Экология</div>
+  <div class="hero-after" id="heroAfter">
+    <h1>Город у подножия гор</h1>
+    <p>Большое Алматинское озеро, 2511 метров над уровнем моря. Отсюда начинается наше путешествие.</p>
+  </div>
+  <div class="scroll-hint"><b></b>листай</div>
+</header>
+
+<!-- ============ 2. ГЕОГРАФИЯ: спуск из космоса ============ -->
+<section class="geo" id="geo">
+  <img class="full g-img g1" src="images/space.jpg" alt="Ночной Алматы с Международной космической станции">
+  <img class="full g-img g2" src="images/aerial.jpg" alt="Алматы с высоты, на горизонте горы">
+  <img class="full g-img g3" src="images/city.jpg" alt="Алматы с горы Кок-Тобе">
+  <div class="shade"></div>
+  <div class="cross"><i></i></div>
+  <div class="hud">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="coord"><small>Координаты</small>43°15′ с.ш.<br>76°55′ в.д.</div>
+    <div class="alt"><small>Высота</small><b id="altNum">400 км</b></div>
+  </div>
+  <div class="caps">
+    <div class="cap" id="cap1"><span class="chip">01 · Вид из космоса</span><h2>Где находится Алматы?</h2><p>Это фото сделали космонавты с МКС ночью. Огни — это город. Алматы находится на <span class="b">юго-востоке Казахстана</span>.</p></div>
+    <div class="cap" id="cap2"><span class="chip">02 · Ближе</span><h2>Город в предгорье</h2><p>Алматы лежит у подножия гор <span class="b">Заилийский Алатау</span> (северный Тянь-Шань). Город стоит на склоне: юг выше, север ниже.</p></div>
+    <div class="cap" id="cap3"><span class="chip">03 · Мы на месте</span><h2>Вид с горы Кок-Тобе</h2><p>С юга — горы, с севера — степь и река <span class="b">Или</span>. Рядом границы с <span class="b">Кыргызстаном</span> и <span class="b">Китаем</span>.</p></div>
+  </div>
+</section>
+
+<section class="facts" id="facts">
+  <img class="full f-bg" src="images/city.jpg" alt="Панорама Алматы">
+  <div class="shade"></div>
+  <div class="f-in">
+    <span class="chip">Алматы в цифрах</span>
+    <div class="f-grid">
+      <div class="f-item"><b><span data-count="2.3" data-dec="1">0</span> млн</b><span>жителей</span></div>
+      <div class="f-item"><b><span data-count="682">0</span> км²</b><span>площадь</span></div>
+      <div class="f-item"><b><span data-count="800">0</span> м</b><span>над уровнем моря</span></div>
+      <div class="f-item"><b><span data-count="1854">0</span></b><span>год основания</span></div>
+    </div>
+    <p class="f-note">«Алма» по-казахски — <b class="b">яблоко</b>. Отсюда имя города.</p>
+  </div>
+</section>
+
+<!-- ============ 3. ГОРЫ ============ -->
+<section class="mount" id="mount">
+  <img class="full m-bg" src="images/pass.jpg" alt="">
+  <div class="m-head" id="mHead">
+    <div class="tag">02 · Горы</div>
+    <h2 class="h2">Спускаемся с вершины</h2>
+    <p class="lead">Заилийский Алатау окружает город с юга. Вершины покрыты снегом и <b>ледниками</b> круглый год. Листай — и спустимся с 4979 м до города.</p>
+  </div>
+  <div class="alt-scale"><i id="altDot"></i></div>
+  <div class="altimeter glass"><small>Высота</small><b id="mAlt">4979 м</b></div>
+
+  <article class="m-card" data-h="4979"><img class="full" src="images/talgar.jpg" alt="Пик Талгар"><div class="shade"></div>
+    <div class="m-txt"><div class="n">01 / 04</div><h3>Пик Талгар</h3><span class="chip">4979 м</span><p style="margin-top:12px">Самая высокая вершина Заилийского Алатау. На ней лежат вечные снега и ледники. Летом ледники тают — так рождаются реки.</p></div></article>
+  <article class="m-card" data-h="2260"><img class="full" src="images/shymbulak.jpg" alt="Шымбулак"><div class="shade"></div>
+    <div class="m-txt"><div class="n">02 / 04</div><h3>Шымбулак</h3><span class="chip">2260 м</span><p style="margin-top:12px">Горнолыжный курорт. Зимой здесь катаются на лыжах и сноуборде, а вниз видно весь город.</p></div></article>
+  <article class="m-card" data-h="1691"><img class="full" src="images/medeu.jpg" alt="Высокогорный каток Медеу"><div class="shade"></div>
+    <div class="m-txt"><div class="n">03 / 04</div><h3>Медеу</h3><span class="chip">1691 м</span><p style="margin-top:12px">Знаменитый высокогорный каток. Выше стоит <b>плотина</b>: в 1973 году она остановила сильный <b>сель</b> — поток воды, грязи и камней.</p></div></article>
+  <article class="m-card" data-h="1100"><img class="full" src="images/koktobe.jpg" alt="Закат над Алматы с горы Кок-Тобе"><div class="shade"></div>
+    <div class="m-txt"><div class="n">04 / 04</div><h3>Кок-Тобе</h3><span class="chip">1100 м</span><p style="margin-top:12px">Гора прямо в городе. Наверх ведёт <b>канатная дорога</b>, а с вершины видно весь Алматы.</p></div></article>
+</section>
+
+<!-- ============ 4. РЕКИ ============ -->
+<section class="rivers" id="rivers">
+  <img class="full r-img" src="images/river-rapids.jpg" alt="Малая Алматинка в урочище Медеу">
+  <img class="full r-img" src="images/river-winter.jpg" alt="Малая Алматинка у Медеу зимой">
+  <img class="full r-img" src="images/river-city.jpg" alt="Алматинка в городе">
+  <img class="full r-img" src="images/esentai.jpg" alt="Река Есентай в городе">
+  <div class="shade"></div>
+  <div class="r-route"><div class="fill" id="rFill"></div>
+    <div class="st on" style="top:0%"><span>Ледник</span></div>
+    <div class="st" style="top:33%"><span>Ущелье</span></div>
+    <div class="st" style="top:66%"><span>Город</span></div>
+    <div class="st" style="top:100%"><span>На север</span></div>
+  </div>
+  <div class="r-txts">
+    <div class="r-t"><span class="chip">03 · Реки</span><h2>Река рождается в леднике</h2><p>Реки Алматы начинаются <b class="b">высоко в горах</b>, где тают ледники. Вода бурная, ледяная и очень чистая. Это <b class="b">Малая Алматинка</b> у Медеу.</p></div>
+    <div class="r-t"><span class="chip">Зима и лето</span><h2>Зимой реки спят</h2><p>Зимой ледники не тают, и реки становятся мелкими. Летом воды много — реки шумят и могут быть <b class="b">опасными</b>.</p></div>
+    <div class="r-t"><span class="chip">В городе</span><h2>Река течёт через город</h2><p><b class="b">Большая и Малая Алматинка</b> текут прямо через Алматы. Их берега укрепили бетоном, чтобы защитить дома от паводков.</p></div>
+    <div class="r-t"><span class="chip">Есентай (Весновка)</span><h2>Набережная для людей</h2><p>Вдоль реки Есентай сделали парк и дорожки. Все реки текут <b class="b">с юга на север</b> — в сторону реки Или.</p></div>
+  </div>
+</section>
+
+<!-- ============ 5. ОЗЁРА ============ -->
+<section class="lakes" id="lakes">
+  <div class="l-track" id="lTrack">
+    <div class="l-intro">
+      <div class="tag">04 · Озёра</div>
+      <h2 class="h2">Бирюзовые озёра</h2>
+      <p class="lead">В горах около Алматы есть удивительные озёра. Вода в них <b>бирюзовая</b> — зелёно-голубая — из-за ледниковой воды и минералов. Листай →</p>
+    </div>
+    <article class="l-panel"><img src="images/hero.jpg" alt="Большое Алматинское озеро"><div class="shade"></div><div class="l-num">01</div>
+      <div class="txt"><span class="chip">2511 м · 15 км от города</span><h3>Большое Алматинское озеро</h3><p>Ледниковое озеро. Даёт городу <b>питьевую воду</b>, поэтому купаться в нём нельзя.</p></div></article>
+    <article class="l-panel"><img src="images/kolsai.jpg" alt="Кольсайское озеро"><div class="shade"></div><div class="l-num">02</div>
+      <div class="txt"><span class="chip">три озера</span><h3>Кольсайские озёра</h3><p>Три озера одно над другим, вокруг — ели и горы. Их называют <b>«жемчужинами Северного Тянь-Шаня»</b>.</p></div></article>
+    <article class="l-panel"><img src="images/kaindy.jpg" alt="Озеро Каинды"><div class="shade"></div><div class="l-num">03</div>
+      <div class="txt"><span class="chip">1911 год · «затонувший лес»</span><h3>Озеро Каинды</h3><p>Появилось после <b>землетрясения</b>: обвал перегородил ущелье. Из воды до сих пор торчат стволы елей.</p></div></article>
+    <article class="l-panel"><img src="images/issyk.jpg" alt="Озеро Иссык"><div class="shade"></div><div class="l-num">04</div>
+      <div class="txt"><span class="chip">восточнее Алматы</span><h3>Озеро Иссык</h3><p>В 1963 году его разрушил мощный <b>сель</b>. Сейчас озеро снова наполняется водой.</p></div></article>
+    <div class="l-end"></div>
+  </div>
+</section>
+
+<!-- ============ 6. ЭКОЛОГИЯ ============ -->
+<section class="eco" id="eco">
+  <img class="full" src="images/smog.jpg" alt="Смог над Алматы">
+  <img class="full e-clear" id="eClear" src="images/clear.jpg" alt="Алматы в ясный день">
+  <div class="shade"></div>
+  <div class="e-line" id="eLine"><i>⇆</i></div>
+  <div class="e-lab l glass" id="eLabL"><i style="background:var(--coral)"></i>Смог · воздух грязный</div>
+  <div class="e-lab r glass" id="eLabR"><i style="background:var(--leaf)"></i>Чистое небо</div>
+  <div class="e-txt">
+    <div class="e-t1" id="eT1"><span class="chip" style="background:rgba(255,122,107,.25);color:#fff">05 · Экология</span><h2 style="margin-top:12px">Зимой город под смогом</h2><p>Листай, чтобы очистить небо над Алматы →</p></div>
+    <div class="e-t2" id="eT2"><h2>Вместе очистим небо!</h2><p>Чистый воздух зависит от каждого из нас.</p></div>
+  </div>
+</section>
+
+<section class="why" id="why">
+  <img class="full w-bg" src="images/smog-top.jpg" alt="Верхняя граница смога над Алматы">
+  <img class="full w-bg w-good" src="images/park.jpg" alt="Иле-Алатауский национальный парк">
+  <div class="shade"></div>
+  <div class="w-in">
+    <div class="w-side w-1">
+      <span class="chip bad-chip">Причина</span>
+      <h2>Город лежит в котловине</h2>
+      <p>Горы держат воздух, зимой нет ветра — дым остаётся над городом серой «шапкой».</p>
+      <div class="w-chips">
+        <span class="wc bad">🚗 Машины</span><span class="wc bad">🏭 ТЭЦ на угле</span>
+        <span class="wc bad">🏠 Печи зимой</span><span class="wc bad">🗑️ Мусор в горах</span>
+      </div>
+    </div>
+    <div class="w-side w-2">
+      <span class="chip">Решение</span>
+      <h2>Что делает воздух чище</h2>
+      <p>Иле-Алатауский национальный парк охраняет горы и леса вокруг города с 1996 года.</p>
+      <div class="w-chips">
+        <span class="wc good">🚇 Метро</span><span class="wc good">🔥 Газ вместо угля</span>
+        <span class="wc good">🌳 Деревья</span><span class="wc good">♻️ Сортировка мусора</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ИГРЫ ============ -->
+<section class="sec games" id="games">
+  <div class="wrap">
+    <div class="tag">06 · Игры</div>
+    <h2 class="h2" data-split>Проверь себя!</h2>
+    <p class="lead reveal">Четыре простые игры по теме урока. Выбирай любую.</p>
+    <div class="tabs">
+      <button class="tab on" data-g="where">📸 Где это?</button>
+      <button class="tab" data-g="quiz">🧠 Викторина</button>
+      <button class="tab" data-g="pairs">🔗 Найди пару</button>
+      <button class="tab" data-g="sort">🌱 Полезно или вредно?</button>
+    </div>
+    <div class="card game on" id="g-where"></div>
+    <div class="card game" id="g-quiz"></div>
+    <div class="card game" id="g-pairs"></div>
+    <div class="card game" id="g-sort"></div>
+  </div>
+</section>
+
+<!-- ============ СЛОВАРЬ ============ -->
+<section class="sec dict" id="dict">
+  <div class="wrap">
+    <div class="tag">07 · Словарь</div>
+    <h2 class="h2" data-split>Новые слова урока</h2>
+    <p class="lead reveal">Нажми на карточку, чтобы узнать значение слова.</p>
+    <div class="grid g4" style="margin-top:40px" id="words"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="uf">Береги природу родного города 💧</div>
+    <p class="who">Проект по русскому языку · Автор: Диярбек Ашурбеков · <a href="#top">↑ Наверх</a></p>
+    <div class="credits" id="credits"></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+
+/* ---------- Авторы фото (Wikimedia Commons) ---------- */
+const CR = [
+  ['Большое Алматинское озеро', 'BitLord', 'CC BY-SA 4.0', 'Big_Almaty_Lake_from_pass.jpg'],
+  ['Ночной Алматы с МКС', 'NASA', 'Public domain', "The_city_lights_of_Almaty,_Kazakhstan's_largest_city_(iss072e445670).jpg"],
+  ['Алматы сверху', 'Ds02006', 'Public domain', 'Almaty_aerial_view.jpg'],
+  ['Алматы, Кок-Тобе', 'Dauren Nabijan', 'CC0', 'Almaty_Kök_Töbe.jpg'],
+  ['Пик Талгар', 'Салиха', 'CC0', 'Pik_Talgar.jpg'],
+  ['Шымбулак', 'Kurmanbek', 'CC BY-SA 4.0', 'Shymbulak_mountain_in_February_2024_10.jpg'],
+  ['Медеу', 'Radosław Botev', 'CC BY 3.0 pl', 'Medeu_stadium.jpg'],
+  ['Закат с Кок-Тобе', 'Vmenkov', 'CC BY-SA 3.0', 'Sunset_over_the_Almaty_seen_from_Kok_Tobe_mountain,_pic_1.jpg'],
+  ['Перевал Талгар', 'Matti Blume', 'CC BY-SA 4.0', 'Talgar_Pass,_Shymbulak,_Almaty_(P1180195-Pano).jpg'],
+  ['Малая Алматинка у Медео', 'Mheidegger', 'Public domain', 'Малая_Алматинка_в_урочище_Медео.JPG'],
+  ['Малая Алматинка зимой', 'Nikolai Bulykin', 'CC BY-SA 4.0', 'Алматы,_Малая_Алматинка_у_Медео_зимой.jpg'],
+  ['Алматинка', 'Anton Yefimov', 'CC BY 3.0', 'Алматинка_-_panoramio_(10).jpg'],
+  ['Есентай', 'Nikolai Bulykin', 'CC BY-SA 4.0', 'Алматы,_Ессентай_под_Муканова.jpg'],
+  ['Кольсай', 'Katariyakartikey', 'CC0', 'Kolsai_lake.jpg'],
+  ['Каинды', 'Anna Powaska', 'CC BY-SA 4.0', 'Lake_Kaindy,_Kazakhstan.jpg'],
+  ['Иссык', 'Дмитрий Савельев', 'Public domain', 'Issyk_Lake.JPG'],
+  ['Смог над Алматы', 'Igors Jefimovs', 'CC BY 3.0', 'Smog_over_Almaty.jpg'],
+  ['Граница смога', 'Kalabaha1969', 'CC BY-SA 3.0', 'Верхняя_граница_смога_над_Алматы..JPG'],
+  ['Алматы в ясный день', 'Dauren Nabijan', 'CC0', 'Almaty_Skyline_from_the_Kök_Töbe_hill.jpg'],
+  ['Иле-Алатауский парк', 'Aidos.taibekuly', 'CC BY-SA 4.0', 'Late_Summer_at_Ile-Alatau_National_Park.jpg'],
+];
+$('#credits').innerHTML = '<b>Фотографии — Wikimedia Commons:</b><br>' + CR.map(([n, a, l, f]) =>
+  `${n} — ${a}, <a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(f)}" target="_blank" rel="noopener">${l}</a>`).join('<br>');
+
+/* ---------- Словарь ---------- */
+const words = [
+  ['Предгорье', 'Местность у подножия гор, где горы начинают подниматься.'],
+  ['Котловина', 'Низкое место, со всех сторон окружённое горами.'],
+  ['Ледник', 'Большая масса льда в горах. Летом тает и даёт воду рекам.'],
+  ['Сель', 'Быстрый поток воды, грязи и камней с гор.'],
+  ['Смог', 'Грязный воздух в виде дымки над городом.'],
+  ['Плотина', 'Стена, которая задерживает воду или сель.'],
+  ['Вершина', 'Самая высокая точка горы.'],
+  ['Экология', 'Наука о природе и о том, как человек на неё влияет.'],
+];
+$('#words').innerHTML = words.map(([w, d]) => `
+  <div class="flip reveal" tabindex="0" role="button" aria-label="${w}">
+    <div class="flip-in"><div class="face front"><h3 class="uf">${w}</h3><small>нажми ↻</small></div><div class="face back"><p>${d}</p></div></div>
+  </div>`).join('');
+$$('.flip').forEach(f => {
+  const t = () => f.classList.toggle('on');
+  f.addEventListener('click', t);
+  f.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } });
+});
+
+/* ---------- Общий движок «вопрос — ответы» ---------- */
+function quizEngine(box, items, render, finishMsg) {
+  let i = 0, score = 0;
+  const step = () => {
+    if (i >= items.length) {
+      const good = score >= Math.ceil(items.length * .8);
+      box.innerHTML = `<div class="result"><div class="big">${score}/${items.length}</div><p class="q-text" style="margin:10px 0 0">${finishMsg(score, items.length)}</p><button class="btn">Сыграть ещё ↻</button></div>`;
+      $('.btn', box).onclick = () => { i = 0; score = 0; step(); };
+      if (good) splash();
+      return;
+    }
+    const ok = items[i][2];
+    box.innerHTML = `<div class="q-top"><span>Вопрос ${i + 1} из ${items.length}</span><span>Очки: ${score}</span></div>
+      <div class="q-prog"><i style="width:${i / items.length * 100}%"></i></div>${render(items[i])}`;
+    $$('.opt', box).forEach(b => b.onclick = () => {
+      const k = +b.dataset.i;
+      $$('.opt', box).forEach(x => x.disabled = true);
+      $$('.opt', box)[ok].classList.add('ok');
+      if (k === ok) { score++; $('.fb', box).textContent = '✅ Верно!'; }
+      else { b.classList.add('no'); $('.fb', box).textContent = '❌ Неверно. Правильный ответ отмечен зелёным.'; }
+      setTimeout(() => { i++; step(); }, 1300);
+    });
+  };
+  step();
+}
+const optsHtml = o => `<div class="opts">${o.map((t, i) => `<button class="opt" data-i="${i}">${String.fromCharCode(65 + i)}. ${t}</button>`).join('')}</div><div class="fb"></div>`;
+
+/* Игра 1: Где это? (по фото) */
+quizEngine($('#g-where'), [
+  ['images/kaindy.jpg', ['Озеро Каинды', 'Медеу', 'Кок-Тобе'], 0],
+  ['images/medeu.jpg', ['Шымбулак', 'Каток Медеу', 'Озеро Иссык'], 1],
+  ['images/talgar.jpg', ['Кок-Тобе', 'Река Есентай', 'Пик Талгар'], 2],
+  ['images/hero.jpg', ['Большое Алматинское озеро', 'Каспийское море', 'Озеро Балхаш'], 0],
+  ['images/smog.jpg', ['Туман над морем', 'Смог над городом', 'Облака в горах'], 1],
+  ['images/shymbulak.jpg', ['Пустыня', 'Озеро Кольсай', 'Горнолыжный курорт Шымбулак'], 2],
+], ([src, o]) => `<div class="where"><div class="pic"><img src="${src}" alt="Угадай место"></div><div><h3 class="q-text">Что на фото?</h3>${optsHtml(o)}</div></div>`,
+  s => s >= 5 ? 'Отлично! Ты узнаёшь все места! 📸' : 'Хорошо! Посмотри фото на сайте ещё раз 👀');
+
+/* Игра 2: Викторина */
+quizEngine($('#g-quiz'), [
+  ['Где находится Алматы?', ['На юго-востоке Казахстана', 'На севере Казахстана', 'На западе Казахстана'], 0],
+  ['У подножия каких гор лежит город?', ['Урал', 'Заилийский Алатау', 'Алтай'], 1],
+  ['Какая вершина самая высокая в Заилийском Алатау?', ['Кок-Тобе', 'Медеу', 'Пик Талгар'], 2],
+  ['На какой высоте находится Большое Алматинское озеро?', ['2511 м', '500 м', '8000 м'], 0],
+  ['Откуда начинаются реки Алматы?', ['Из моря', 'Из ледников в горах', 'Из пустыни'], 1],
+  ['Что защищает город от селей?', ['Метро', 'Каток', 'Плотина Медеу'], 2],
+  ['Почему зимой в городе бывает смог?', ['Город в котловине, мало ветра', 'В городе много озёр', 'Летом очень жарко'], 0],
+  ['Что помогает сделать воздух чище?', ['Топить печи углём', 'Ездить на метро и электробусах', 'Жечь мусор'], 1],
+  ['Какое озеро называют «затонувший лес»?', ['Иссык', 'Большое Алматинское', 'Каинды'], 2],
+  ['Как раньше назывался Алматы?', ['Верный', 'Акмола', 'Целиноград'], 0],
+], ([q, o]) => `<h3 class="q-text">${q}</h3>${optsHtml(o)}`,
+  s => s >= 8 ? 'Отлично! Ты настоящий знаток Алматы! 🏆' : s >= 5 ? 'Хорошо! Ещё немного — и будет отлично 👍' : 'Попробуй ещё раз — у тебя получится! 💪');
+
+/* Игра 3: Найди пару */
+const P = [['Пик Талгар', 'самая высокая вершина'], ['Медеу', 'каток и плотина'], ['Большая Алматинка', 'река'],
+  ['Каинды', 'затонувший лес'], ['Смог', 'грязный воздух'], ['Ледник', 'лёд в горах']];
+const gp = $('#g-pairs');
+function pairs() {
+  const shuf = a => a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(v => v[1]);
+  const L = shuf(P.map((p, i) => [p[0], i])), R = shuf(P.map((p, i) => [p[1], i]));
+  gp.innerHTML = `<div class="q-top"><span>Соедини слово и его значение</span><span id="pc">0 / ${P.length}</span></div>
+    <div class="pairs"><div class="colp">${L.map(([t, i]) => `<button class="pc" data-s="l" data-i="${i}">${t}</button>`).join('')}</div>
+    <div class="colp">${R.map(([t, i]) => `<button class="pc" data-s="r" data-i="${i}">${t}</button>`).join('')}</div></div>
+    <div class="fb" id="pfb">Нажми на слово слева, потом на значение справа.</div>`;
+  let sel = null, done = 0;
+  $$('.pc', gp).forEach(b => b.onclick = () => {
+    if (!sel || sel.dataset.s === b.dataset.s) { if (sel) sel.classList.remove('sel'); sel = b; b.classList.add('sel'); return; }
+    if (sel.dataset.i === b.dataset.i) {
+      sel.classList.remove('sel'); sel.classList.add('done'); b.classList.add('done');
+      done++; $('#pc').textContent = `${done} / ${P.length}`; $('#pfb').textContent = '✅ Правильно!';
+      if (done === P.length) { $('#pfb').innerHTML = '🎉 Молодец! Все пары найдены. <button class="btn" id="pr">Ещё раз ↻</button>'; $('#pr').onclick = pairs; splash(); }
+    } else {
+      const a = sel, c = b;
+      a.classList.add('no'); c.classList.add('no'); $('#pfb').textContent = '❌ Не пара. Попробуй ещё!';
+      setTimeout(() => { a.classList.remove('no', 'sel'); c.classList.remove('no'); }, 450);
+    }
+    sel = null;
+  });
+}
+pairs();
+
+/* Игра 4: Полезно или вредно */
+const S = [['🌳', 'Посадить дерево', 1], ['🚇', 'Ехать на метро', 1], ['🔥', 'Топить печь углём', 0], ['🗑️', 'Оставить мусор у озера', 0],
+  ['♻️', 'Сортировать мусор', 1], ['🚲', 'Ездить на велосипеде', 1], ['🚗', 'Ехать на машине одному каждый день', 0], ['🏕️', 'Оставить костёр в лесу', 0]];
+const gs = $('#g-sort');
+let si = 0, ss = 0;
+function sortG() {
+  if (si >= S.length) {
+    gs.innerHTML = `<div class="result"><div class="big">${ss}/${S.length}</div><p class="q-text" style="margin:10px 0 0">${ss === S.length ? 'Ты настоящий друг природы! 🌍' : 'Хорошо! Природа говорит спасибо 💚'}</p><button class="btn" id="sr">Сыграть ещё ↻</button></div>`;
+    $('#sr').onclick = () => { si = 0; ss = 0; sortG(); };
+    if (ss === S.length) splash();
+    return;
+  }
+  const [e, t] = S[si];
+  gs.innerHTML = `<div class="q-top"><span>Карточка ${si + 1} из ${S.length}</span><span>Очки: ${ss}</span></div>
+    <div class="q-prog"><i style="width:${si / S.length * 100}%"></i></div>
+    <div class="sort-card"><div class="sort-item" id="si"><span class="em">${e}</span>${t}</div>
+    <div class="sort-btns"><button class="b-bad" data-v="0">❌ Вредно</button><button class="b-good" data-v="1">✅ Полезно</button></div>
+    <div class="fb" id="sfb"></div></div>`;
+  $$('.sort-btns button', gs).forEach(b => b.onclick = () => {
+    const v = +b.dataset.v, right = v === S[si][2];
+    $$('.sort-btns button', gs).forEach(x => x.disabled = true);
+    if (right) ss++;
+    $('#sfb').textContent = right ? '✅ Верно!' : (S[si][2] ? '❌ Это полезно для природы.' : '❌ Это вредно для природы.');
+    if (hasGsap && !reduce) gsap.to('#si', { x: v ? 300 : -300, rotate: v ? 14 : -14, opacity: 0, duration: .6, delay: .6, ease: 'power2.in' });
+    setTimeout(() => { si++; sortG(); }, 1250);
+  });
+}
+sortG();
+
+$$('.tab').forEach(t => t.onclick = () => {
+  $$('.tab').forEach(x => x.classList.toggle('on', x === t));
+  $$('.game').forEach(g => g.classList.toggle('on', g.id === 'g-' + t.dataset.g));
+});
+
+/* ---------- Брызги, круги на воде, курсор ---------- */
+function splash() {
+  for (let i = 0; i < 40; i++) {
+    const d = document.createElement('div');
+    d.className = 'ripple';
+    d.style.left = innerWidth / 2 + (Math.random() - .5) * innerWidth * .8 + 'px';
+    d.style.top = innerHeight / 2 + (Math.random() - .5) * innerHeight * .6 + 'px';
+    d.style.animationDelay = Math.random() * .6 + 's';
+    d.style.borderColor = ['#5ee6d6', '#ffc76b', '#5fd38d', '#e8fbff'][i % 4];
+    document.body.appendChild(d); setTimeout(() => d.remove(), 1800);
+  }
+}
+addEventListener('pointerdown', e => {
+  if (reduce) return;
+  const r = document.createElement('div');
+  r.className = 'ripple'; r.style.left = e.clientX + 'px'; r.style.top = e.clientY + 'px';
+  document.body.appendChild(r); setTimeout(() => r.remove(), 950);
+});
+const cur = $('#cur');
+let mx = innerWidth / 2, my = innerHeight / 2, cx0 = mx, cy0 = my;
+addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; cur.classList.toggle('big', !!e.target.closest('a,button,.flip')); });
+(function follow() { cx0 += (mx - cx0) * .18; cy0 += (my - cy0) * .18; cur.style.transform = `translate(${cx0}px,${cy0}px)`; requestAnimationFrame(follow); })();
+
+/* ---------- Пузырьки ---------- */
+const cv = $('#bubbles'), ctx = cv.getContext('2d');
+let W, H, vel = 0;
+const B = [];
+function size() { W = cv.width = document.documentElement.clientWidth; H = cv.height = innerHeight; }
+size(); addEventListener('resize', size);
+for (let i = 0; i < 34; i++) B.push({ x: Math.random() * W, y: Math.random() * H, r: 1 + Math.random() * 4, s: .2 + Math.random() * .6, w: Math.random() * 6.28 });
+function bub() {
+  ctx.clearRect(0, 0, W, H);
+  B.forEach(b => {
+    b.y -= b.s + vel * .05; b.w += .02; const x = b.x + Math.sin(b.w) * 12;
+    if (b.y < -10) { b.y = H + 10; b.x = Math.random() * W; }
+    if (b.y > H + 20) b.y = -10;
+    ctx.beginPath(); ctx.arc(x, b.y, b.r, 0, 6.28);
+    ctx.strokeStyle = 'rgba(232,251,255,.55)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = 'rgba(232,251,255,.08)'; ctx.fill();
+  });
+  requestAnimationFrame(bub);
+}
+if (!reduce) bub();
+
+/* ---------- Прогресс и текущая глава ---------- */
+const fill = $('#tubeFill'), links = $$('.nav a');
+function onScroll() {
+  fill.style.height = (scrollY / (document.documentElement.scrollHeight - innerHeight) * 100) + '%';
+  let cur = null;
+  links.forEach(a => { const s = $(a.getAttribute('href')); if (s && s.getBoundingClientRect().top < innerHeight * .5) cur = a; });
+  links.forEach(a => a.classList.toggle('on', a === cur));
+  $('#chNum').textContent = cur ? cur.dataset.n : '00';
+  $('#chName').textContent = cur ? cur.textContent : 'Алматы';
+}
+addEventListener('scroll', onScroll, { passive: true });
+
+/* ---------- Прелоадер: ждём фото и шрифты ---------- */
+const imgs = $$('img').filter(i => !i.closest('.game'));
+let loaded = 0;
+const bump = () => { loaded++; const p = Math.round(loaded / imgs.length * 100); $('#lPct').textContent = p; $('#lWater').style.height = p + '%'; };
+const ready = Promise.all([
+  ...imgs.map(i => i.complete ? (bump(), 1) : new Promise(r => { i.addEventListener('load', () => { bump(); r(); }, { once: true }); i.addEventListener('error', () => { bump(); r(); }, { once: true }); })),
+  document.fonts ? document.fonts.ready : 1,
+]);
+Promise.race([ready, new Promise(r => setTimeout(r, 7000))]).then(start);
+
+function start() {
+  $('#lPct').textContent = 100; $('#lWater').style.height = '100%';
+  document.body.classList.remove('loading');
+  onScroll();
+  if (!hasGsap || reduce) { $('#loader').remove(); staticMode(); return; }
+  gsap.to('#loader', { yPercent: -100, duration: 1.2, ease: 'expo.inOut', delay: .3, onComplete: () => $('#loader').remove() });
+  initMotion();
+}
+
+/* Без анимаций: показываем всё по-простому */
+function staticMode() {
+  $$('.g2,.g3,.cap,.r-t,.e-t2,.w-2,.w-good,#heroAfter').forEach(e => e.style.opacity = 1);
+  $$('.r-img').forEach(e => e.style.clipPath = 'none');
+  $('#why').style.height = 'auto';
+  $('.w-in').style.cssText = 'position:relative;display:block;padding:14vh clamp(16px,6vw,90px)';
+  $$('.w-side').forEach(e => { e.style.gridArea = 'auto'; e.style.marginBottom = '50px'; });
+}
+
+/* ================= ДВИЖЕНИЕ ================= */
+function initMotion() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* Плавный скролл — «плывём в воде» */
+  let lenis = null;
+  if (typeof Lenis !== 'undefined') {
+    lenis = new Lenis({ duration: 1.5, easing: t => 1 - Math.pow(1 - t, 4), smoothWheel: true });
+    lenis.on('scroll', e => { ScrollTrigger.update(); vel = e.velocity || 0; });
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const t = $(a.getAttribute('href')); if (!t) return;
+    e.preventDefault();
+    const st = ScrollTrigger.getAll().find(s => s.pin === t);
+    const y = st ? st.start : t.getBoundingClientRect().top + scrollY;
+    lenis ? lenis.scrollTo(y, { duration: 2 }) : scrollTo({ top: y, behavior: 'smooth' });
+  }));
+
+  /* ===== 1. HERO: влетаем сквозь буквы ===== */
+  gsap.timeline({ defaults: { ease: 'expo.out' }, delay: .6 })
+    .from('.hero-mask', { scale: .7, opacity: 0, duration: 2 })
+    .from('.hero-img', { scale: 1.6, duration: 2.6 }, 0)
+    .from('#heroTop,#heroBottom,.scroll-hint', { y: 30, opacity: 0, duration: 1.2, stagger: .1 }, .8);
+
+  gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=180%', pin: true, scrub: 1 } })
+    .to('#heroTop,#heroBottom,.scroll-hint', { opacity: 0, y: -30, duration: .15 }, 0)
+    .to('.hero-mask', { scale: 14, duration: 1, ease: 'power2.in', transformOrigin: '50% 54%' }, 0)
+    .to('.hero-mask', { opacity: 0, duration: .25 }, .75)
+    .fromTo('.hero-img', { scale: 1.35 }, { scale: 1, duration: 1.2, ease: 'none', immediateRender: false }, 0)
+    .to('#heroAfter', { opacity: 1, duration: .3 }, .95)
+    .fromTo('#heroAfter h1,#heroAfter p', { y: 60 }, { y: 0, duration: .3, stagger: .05 }, .95);
+
+  /* ===== 2. ГЕО: спуск из космоса ===== */
+  const alt = { v: 400 };
+  const altTxt = () => $('#altNum').textContent = alt.v >= 10 ? Math.round(alt.v) + ' км' : alt.v.toFixed(1).replace('.', ',') + ' км';
+  gsap.set('#cap1', { opacity: 1 });
+  gsap.timeline({ scrollTrigger: { trigger: '#geo', start: 'top top', end: '+=350%', pin: true, scrub: 1 } })
+    .fromTo('.g1', { scale: 1 }, { scale: 3.4, duration: 1.2, ease: 'power1.in' }, 0)
+    .to(alt, { v: 12, duration: 1.2, ease: 'power2.in', onUpdate: altTxt }, 0)
+    .to('#cap1', { opacity: 0, y: -40, duration: .25 }, .7)
+    .fromTo('.g2', { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1.05, duration: .5 }, 1)
+    .fromTo('#cap2', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .3 }, 1.2)
+    .to('.g2', { scale: 1.3, duration: 1, ease: 'none' }, 1.5)
+    .to(alt, { v: 2, duration: 1, ease: 'none', onUpdate: altTxt }, 1.5)
+    .to('#cap2', { opacity: 0, y: -40, duration: .25 }, 2.2)
+    .fromTo('.g3', { opacity: 1, clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(80% at 50% 50%)', duration: .7, ease: 'power2.inOut' }, 2.3)
+    .fromTo('.g3', { scale: 1.3 }, { scale: 1, duration: 1, ease: 'none' }, 2.3)
+    .to(alt, { v: 1.1, duration: .7, onUpdate: altTxt }, 2.3)
+    .to('.cross', { scale: 3, opacity: 0, duration: .5 }, 2.4)
+    .fromTo('#cap3', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .3 }, 2.8)
+    .to({}, { duration: .4 });
+
+  /* ===== 3. ГОРЫ: стопка фото, высотомер ===== */
+  const cards = $$('.m-card'), mAlt = { v: 4979 };
+  gsap.set(cards, { xPercent: -50, yPercent: -50, y: () => innerHeight * 1.1 });
+  const mt = gsap.timeline({ scrollTrigger: { trigger: '#mount', start: 'top top', end: () => '+=' + innerHeight * 4.5, pin: true, scrub: 1, invalidateOnRefresh: true } });
+  mt.to('#mHead', { opacity: 0, scale: .9, duration: .5 }, .3)
+    .to('.m-bg', { scale: 1.25, duration: cards.length + 1, ease: 'none' }, 0);
+  cards.forEach((c, i) => {
+    const at = .5 + i;
+    mt.to(c, { y: 0, duration: 1, ease: 'power3.out' }, at)
+      .fromTo(c.querySelector('img'), { scale: 1.4 }, { scale: 1.05, duration: 1.4, ease: 'none' }, at)
+      .fromTo(c.querySelectorAll('.m-txt > *'), { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: .08, duration: .4 }, at + .4)
+      .to(mAlt, { v: +c.dataset.h, duration: .8, onUpdate: () => $('#mAlt').textContent = Math.round(mAlt.v) + ' м' }, at)
+      .to('#altDot', { top: (1 - (+c.dataset.h - 800) / 4179) * 100 + '%', duration: .8 }, at);
+    if (i) mt.to(cards[i - 1], { scale: .88, filter: 'brightness(.4)', y: () => -innerHeight * .04, duration: 1 }, at);
+  });
+  mt.to({}, { duration: .5 });
+
+  /* ===== 4. РЕКИ: вода открывает кадры сверху вниз ===== */
+  const rImgs = $$('.r-img'), rT = $$('.r-t'), sts = $$('.r-route .st');
+  const rt = gsap.timeline({ scrollTrigger: { trigger: '#rivers', start: 'top top', end: '+=400%', pin: true, scrub: 1,
+    onUpdate: s => { const k = Math.min(sts.length - 1, Math.floor(s.progress * (sts.length + .3))); sts.forEach((x, j) => x.classList.toggle('on', j <= k)); } } });
+  rt.fromTo(rImgs[0], { scale: 1.3 }, { scale: 1, duration: 1, ease: 'none' }, 0)
+    .to('#rFill', { height: '100%', duration: rImgs.length - 1, ease: 'none' }, .5);
+  rImgs.slice(1).forEach((im, k) => {
+    const at = .6 + k;
+    rt.fromTo(im, { clipPath: 'inset(0% 0% 100% 0%)', scale: 1.25 }, { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, duration: .8, ease: 'power2.inOut' }, at)
+      .to(rT[k], { opacity: 0, y: -60, duration: .3 }, at)
+      .fromTo(rT[k + 1], { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: .35, immediateRender: false }, at + .4);
+  });
+  rt.to({}, { duration: .4 });
+
+  /* ===== 5. ОЗЁРА: горизонтальная прокрутка ===== */
+  const track = $('#lTrack');
+  const dist = () => track.scrollWidth - innerWidth;
+  const hz = gsap.to(track, { x: () => -dist(), ease: 'none',
+    scrollTrigger: { trigger: '#lakes', start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 1, invalidateOnRefresh: true } });
+  $$('.l-panel').forEach(p => {
+    gsap.fromTo(p.querySelector('img'), { xPercent: -8 }, { xPercent: 8, ease: 'none',
+      scrollTrigger: { trigger: p, containerAnimation: hz, start: 'left right', end: 'right left', scrub: true } });
+    gsap.from(p, { scale: .85, rotate: 3, ease: 'none',
+      scrollTrigger: { trigger: p, containerAnimation: hz, start: 'left right', end: 'center center', scrub: true } });
+    gsap.from(p.querySelectorAll('.txt > *, .l-num'), { y: 50, opacity: 0, stagger: .1, duration: .8, ease: 'power3.out',
+      scrollTrigger: { trigger: p, containerAnimation: hz, start: 'left 60%' } });
+  });
+
+  /* ===== 6. ЭКОЛОГИЯ: стираем смог ===== */
+  const prog = { p: 0 };
+  const paint = () => {
+    $('#eClear').style.clipPath = `inset(0 0 0 ${100 - prog.p}%)`;
+    $('#eLine').style.left = (100 - prog.p) + '%';
+  };
+  gsap.set('#eT2', { y: 30 });
+  gsap.timeline({ scrollTrigger: { trigger: '#eco', start: 'top top', end: '+=220%', pin: true, scrub: 1 } })
+    .to(prog, { p: 100, duration: 1, ease: 'none', onUpdate: paint }, .15)
+    .to('#eT1', { opacity: 0, y: -30, duration: .2 }, .45)
+    .to('#eLabL', { opacity: 0, duration: .15 }, .7)
+    .to('#eLabR', { opacity: 1, duration: .15 }, .55)
+    .to('#eT2', { opacity: 1, y: 0, duration: .25 }, .9)
+    .to('#eLine', { opacity: 0, duration: .1 }, 1.1)
+    .to({}, { duration: .2 });
+
+  /* ===== Заголовки и блоки «всплывают» ===== */
+  $$('[data-split]').forEach(h => {
+    h.innerHTML = h.textContent.trim().split(/\s+/).map(w => `<span class="w"><span>${w}</span></span>`).join(' ');
+    gsap.from(h.querySelectorAll('.w>span'), { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: .06, scrollTrigger: { trigger: h, start: 'top 85%' } });
+  });
+  gsap.set('.reveal', { opacity: 0 });
+  ScrollTrigger.batch('.reveal', { start: 'top 88%',
+    onEnter: els => gsap.fromTo(els, { y: 60, opacity: 0, filter: 'blur(8px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out', stagger: .1, overwrite: true }) });
+  /* Цифры над фото */
+  gsap.fromTo('.f-bg', { scale: 1.25 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '#facts', start: 'top bottom', end: 'bottom top', scrub: true } });
+  gsap.from('.f-item', { y: 70, opacity: 0, duration: 1, ease: 'expo.out', stagger: .12, scrollTrigger: { trigger: '#facts', start: 'top 55%' } });
+  gsap.from('.f-in .chip,.f-note', { y: 30, opacity: 0, duration: 1, stagger: .15, scrollTrigger: { trigger: '#facts', start: 'top 55%' } });
+
+  /* Причина → решение */
+  gsap.from('.w-1 > *', { y: 50, opacity: 0, stagger: .08, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '#why', start: 'top 60%' } });
+  gsap.timeline({ scrollTrigger: { trigger: '#why', start: 'top top', end: '+=200%', pin: true, scrub: 1 } })
+    .to('.w-1', { opacity: 0, y: -50, duration: .3 }, 1)
+    .to('.w-good', { opacity: 1, duration: .5 }, 1)
+    .fromTo('.w-bg', { scale: 1.2 }, { scale: 1, ease: 'none', duration: 2 }, 0)
+    .fromTo('.w-2', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .4 }, 1.3)
+    .fromTo('.w-2 .wc', { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: .08, duration: .3 }, 1.5)
+    .to({}, { duration: .4 });
+
+  $$('[data-count]').forEach(el => {
+    const end = +el.dataset.count, dec = +(el.dataset.dec || 0), o = { v: 0 };
+    gsap.to(o, { v: end, duration: 2.2, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 90%' },
+      onUpdate: () => el.textContent = dec ? o.v.toFixed(dec).replace('.', ',') : Math.round(o.v) });
+  });
+
+  ScrollTrigger.refresh();
+}
+})();
+</script>
+</body>
+</html>

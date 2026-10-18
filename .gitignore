@@ -1,0 +1,17 @@
+# Служебные файлы Windows и macOS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Редакторы
+.vscode/
+.idea/
+*.swp
+
+# Временные файлы
+*.tmp
+*.log
+
+# Настройки редактора Claude Code
+.claude/
